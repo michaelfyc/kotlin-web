@@ -24,22 +24,22 @@ fun Application.configureUserRouting() {
     val algorithm = Algorithm.HMAC256(secret)
 
     routing {
-        route("/user"){
+        route("/user") {
             authenticate(realm) {
-                get(){
+                get() {
                     val principal = call.principal<JWTPrincipal>()
                     val uid = principal!!.payload.getClaim("uid").asInt()
                     val user = userService.getUserByUid(uid!!)
-                    if(user != null) {
+                    if (user != null) {
                         call.respond(mapOf("username" to user.username))
                     }
                     call.respond(HttpStatusCode.NotFound)
                 }
             }
-            post("/login"){
+            post("/login") {
                 val loginUser = call.receive<User>()
                 val user = userService.getUserByEmail(loginUser.email)
-                if(user?.password != loginUser.password) {
+                if (user?.password != loginUser.password) {
                     call.respond(HttpStatusCode.Forbidden, "wrong password")
                 }
                 val expireTime = Date(System.currentTimeMillis() + 60000)
@@ -50,12 +50,12 @@ fun Application.configureUserRouting() {
                     .sign(algorithm)
                 call.respond(mapOf("access_token" to token, "expires_at" to expireTime))
             }
-            post("/new"){
+            post("/new") {
                 val user = call.receive<User>()
-                if(user.email == "" || !user.email.contains("@")){
+                if (user.email == "" || !user.email.contains("@")) {
                     call.respond(HttpStatusCode.BadRequest, "invalid email or password")
                 }
-                if(user.password.length < 6 || user.password.length > 32){
+                if (user.password.length < 6 || user.password.length > 32) {
                     call.respond(HttpStatusCode.BadRequest, "invalid email or password")
                 }
                 userService.newUser(user)

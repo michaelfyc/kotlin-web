@@ -5,7 +5,13 @@ import com.michael.entities.Users
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.insert
+import org.ktorm.dsl.limit
+import org.ktorm.dsl.map
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
 
 class UserDAO : KoinComponent {
     private val database: Database by inject()
@@ -17,14 +23,16 @@ class UserDAO : KoinComponent {
         }
         return if (user.isNotEmpty()) {
             user[0]
-        } else null
+        } else {
+            null
+        }
     }
 
     fun getUserByEmail(email: String): User? {
         val user = database.from(Users).select().where {
             Users.email eq email
         }.limit(1).map { Users.createEntity(it) }
-        if(user.isNotEmpty()){
+        if (user.isNotEmpty()) {
             return user[0]
         }
         return null

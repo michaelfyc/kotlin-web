@@ -2,8 +2,8 @@ package com.michael.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
+import io.ktor.server.application.Application
+import io.ktor.server.auth.authentication
 import io.ktor.server.auth.jwt.*
 import java.util.*
 
@@ -19,12 +19,12 @@ fun Application.configureSecurity() {
                     .require(Algorithm.HMAC256(secret))
                     .withAudience(jwtAudience)
                     .withIssuer(issuer)
-                    .build()
+                    .build(),
             )
             validate { credential ->
-                if(Date(System.currentTimeMillis()).after(credential.expiresAt)){
-                     null
-                }else {
+                if (Date(System.currentTimeMillis()).after(credential.expiresAt)) {
+                    null
+                } else {
                     if (credential.payload.getClaim("uid").asInt() != 0) JWTPrincipal(credential.payload) else null
                 }
             }

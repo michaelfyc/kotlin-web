@@ -4,9 +4,9 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configHealthRoute(){
+fun Application.configHealthRoute() {
     routing {
-        get("/health"){
+        get("/health") {
             call.respondText("ok")
         }
     }
