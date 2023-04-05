@@ -1,0 +1,18 @@
+ktor:
+  application:
+    modules:
+      - com.michael.ApplicationKt.module
+  deployment:
+    port: 9999
+jwt:
+  issuer: "http://0.0.0.0:9999"
+  audience: "http://0.0.0.0:9999"
+  realm: "access to user info"
+  secret: "c2VjcmV0X2p3dF9rZXk="
+
+database:
+  url: "jdbc:mysql://localhost:3306/test"
+  driver: "com.mysql.cj.jdbc.Driver"
+  username: root
+  password: "123456"
+  database: "test"
