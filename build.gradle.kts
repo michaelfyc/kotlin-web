@@ -1,4 +1,6 @@
-import io.ktor.plugin.features.*
+import io.ktor.plugin.features.DockerPortMapping
+import io.ktor.plugin.features.DockerPortMappingProtocol
+
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -44,11 +46,17 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 ktor {
     docker {
-        portMappings.set(listOf(
-            DockerPortMapping(9999, 9999, DockerPortMappingProtocol.TCP)
-        ))
+        portMappings.set(
+            listOf(
+                DockerPortMapping(9999, 9999, DockerPortMappingProtocol.TCP),
+            ),
+        )
         imageTag.set("0.0.1")
         localImageName.set("kotlin-web")
     }
